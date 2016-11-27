@@ -1,4 +1,4 @@
-FROM mybbcat/docker-phantomjs
+FROM mybbcat/docker-phantomjs:2.1.1
 MAINTAINER binux <roy@binux.me>
 
 # install python

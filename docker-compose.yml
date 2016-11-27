@@ -1,0 +1,54 @@
+db:
+  image: index.docker.io/sameersbn/mysql:latest
+  restart: always
+  volumes:
+  - /mnt/diskb/docker/pyspider/mysql:/var/lib/mysql
+  environment:
+  - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+
+mq:
+  image: index.docker.io/library/rabbitmq:latest
+  restart: always
+  
+phantomjs:
+  image: index.docker.io/binux/pyspider:latest
+  command: phantomjs
+
+result:
+  image: index.docker.io/binux/pyspider:latest
+  links:
+    - db
+    - mq
+  command: result_worker
+
+processor:
+  image: index.docker.io/binux/pyspider:latest
+  links:
+    - db
+    - mq
+  command: processor
+
+fetcher:
+  image: index.docker.io/binux/pyspider:latest
+  links:
+    - mq
+    - phantomjs
+  command : fetcher
+
+scheduler:
+  image: index.docker.io/binux/pyspider:latest
+  links:
+    - db
+    - mq
+  command: scheduler
+
+webui:
+  image: index.docker.io/binux/pyspider:latest
+  links:
+    - db
+    - mq
+    - scheduler
+    - phantomjs
+  command: webui
+  ports:
+    - "5000:5000"
