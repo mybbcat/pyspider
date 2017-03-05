@@ -23,7 +23,7 @@ from six.moves import cPickle
 class BaseCounter(object):
 
     def __init__(self):
-        raise NotImplementedError
+        pass
 
     def event(self, value=1):
         """Fire a event."""
@@ -52,6 +52,7 @@ class TotalCounter(BaseCounter):
     """Total counter"""
 
     def __init__(self):
+        super(TotalCounter, self).__init__()
         self.cnt = 0
 
     def event(self, value=1):
@@ -78,6 +79,7 @@ class AverageWindowCounter(BaseCounter):
     """
 
     def __init__(self, window_size=300):
+        super(AverageWindowCounter, self).__init__()
         self.window_size = window_size
         self.values = deque(maxlen=window_size)
 
@@ -107,6 +109,7 @@ class TimebaseAverageEventCounter(BaseCounter):
     """
 
     def __init__(self, window_size=30, window_interval=10):
+        super(TimebaseAverageEventCounter, self).__init__()
         self.max_window_size = window_size
         self.window_size = 0
         self.window_interval = window_interval
@@ -192,6 +195,7 @@ class TimebaseAverageWindowCounter(BaseCounter):
     """
 
     def __init__(self, window_size=30, window_interval=10):
+        super(TimebaseAverageWindowCounter, self).__init__()
         self.max_window_size = window_size
         self.window_size = 0
         self.window_interval = window_interval
@@ -278,7 +282,7 @@ class CounterValue(DictMixin):
             key = self._keys + (key, )
 
         available_keys = []
-        for _key in self.manager.counters.keys():
+        for _key in list(self.manager.counters.keys()):
             if _key[:len(key)] == key:
                 available_keys.append(_key)
 
@@ -286,7 +290,7 @@ class CounterValue(DictMixin):
             raise KeyError
         elif len(available_keys) == 1:
             if available_keys[0] == key:
-                return self.manager.counters[key]
+                return self.manager.counters.get(key)
             else:
                 return CounterValue(self.manager, key)
         else:
@@ -352,6 +356,7 @@ class CounterManager(DictMixin):
         """Set value of a counter by counter key"""
         if isinstance(key, six.string_types):
             key = (key, )
+        # assert all(isinstance(k, six.string_types) for k in key)
         assert isinstance(key, tuple), "event key type error"
         if key not in self.counters:
             self.counters[key] = self.cls()

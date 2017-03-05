@@ -218,7 +218,7 @@ class BaseHandler(object):
         return ProcessorResult(result, follows, messages, logs, exception, extinfo, save)
 
     schedule_fields = ('priority', 'retries', 'exetime', 'age', 'itag', 'force_update', 'auto_recrawl', 'cancel')
-    fetch_fields = ('method', 'headers', 'data', 'connect_timeout', 'timeout', 'allow_redirects', 'cookies',
+    fetch_fields = ('method', 'headers', 'user_agent', 'data', 'connect_timeout', 'timeout', 'allow_redirects', 'cookies',
                     'proxy', 'etag', 'last_modifed', 'last_modified', 'save', 'js_run_at', 'js_script',
                     'js_viewport_width', 'js_viewport_height', 'load_images', 'fetch_type', 'use_gzip', 'validate_cert',
                     'max_redirects', 'robots_txt')
@@ -231,7 +231,9 @@ class BaseHandler(object):
             if k in crawl_config:
                 v = crawl_config[k]
                 if isinstance(v, dict) and isinstance(task_fetch.get(k), dict):
-                    task_fetch[k].update(v)
+                    v = dict(v)
+                    v.update(task_fetch[k])
+                    task_fetch[k] = v
                 else:
                     task_fetch.setdefault(k, v)
         if task_fetch:
@@ -289,6 +291,10 @@ class BaseHandler(object):
             kwargs['data'] = _encode_params(kwargs['data'])
         if kwargs.get('data'):
             kwargs.setdefault('method', 'POST')
+
+        if kwargs.get('user_agent'):
+            kwargs.setdefault('headers', {})
+            kwargs['headers']['User-Agent'] = kwargs.get('user_agent')
 
         schedule = {}
         for key in self.schedule_fields:
