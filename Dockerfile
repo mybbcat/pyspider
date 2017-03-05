@@ -11,6 +11,7 @@ RUN pip install -U pip setuptools
 RUN pip install --egg 'https://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-2.1.5.zip#md5=ce4a24cb1746c1c8f6189a97087f21c1'
 ADD requirements.txt /opt/pyspider/requirements.txt
 RUN pip install -r /opt/pyspider/requirements.txt
+RUN pip install oss2
 
 # add all repo
 ADD ./ /opt/pyspider

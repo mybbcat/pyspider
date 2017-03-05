@@ -22,4 +22,3 @@ kombu
 psycopg2
 elasticsearch
 tblib
-oss2
