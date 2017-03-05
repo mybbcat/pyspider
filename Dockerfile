@@ -9,6 +9,7 @@ RUN apt-get update && \
 # install requirements
 RUN pip install six
 RUN pip install packaging
+RUN pip install appdirs
 RUN pip install -U pip setuptools
 RUN pip install --egg 'https://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-2.1.5.zip#md5=ce4a24cb1746c1c8f6189a97087f21c1'
 ADD requirements.txt /opt/pyspider/requirements.txt
