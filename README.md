@@ -1,5 +1,7 @@
+### 安装了阿里云OSS SDK，更新版本phantomjs至2.1.1。
+
+-----
 pyspider [![Build Status]][Travis CI] [![Coverage Status]][Coverage] [![Try]][Demo]
-========
 
 A Powerful Spider(Web Crawler) System in Python. **[TRY IT NOW!][Demo]**
 
